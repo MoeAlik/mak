@@ -9,7 +9,11 @@ This is a custom implementation of some of the core features of the C++ Standard
 
 ## Implemented headers
 
+- type_traits
 - Utility
+
+### Type Traits
+
 
 ### Utility
 

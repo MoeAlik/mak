@@ -1,5 +1,7 @@
-#include "src/utility/utility.h"
+#include "cassert"
+#include "headers/utility.h"
 
-int main(int argc, char* argv[]) {
-
+int main(int argc, char *argv[]) {
+  assert(argc);
+  assert(argv);
 }
