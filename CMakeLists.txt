@@ -12,4 +12,4 @@ add_compile_options(
     -Wextra
 )
 
-add_executable(test main.cpp)
+add_executable(mak main.cpp)

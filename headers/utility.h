@@ -56,6 +56,8 @@ template <class T1, class T2> struct pair {
 
   pair(const pair &p) = default;
   pair(pair &&p) = default;
+
+  // pair &operator=(const pair& other);
 };
 
 } // namespace mak
