@@ -12,4 +12,12 @@ add_compile_options(
     -Wextra
 )
 
-add_executable(mak main.cpp)
+# TODO: add glob thingy
+set(SOURCES 
+    main.cpp
+    test/type_traits_test.cpp
+    test/utility_test.cpp
+)
+
+add_executable(mak ${SOURCES})
+target_include_directories(mak PRIVATE ${CMAKE_SOURCE_DIR})

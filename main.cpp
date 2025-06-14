@@ -1,7 +1,3 @@
-#include "cassert"
-#include "headers/utility.h"
+#include "test/test.h"
 
-int main(int argc, char *argv[]) {
-  assert(argc);
-  assert(argv);
-}
+int main(int, char *[]) { run_test(); }
