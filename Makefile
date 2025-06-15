@@ -184,6 +184,30 @@ test/type_traits_test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mak.dir/build.make CMakeFiles/mak.dir/test/type_traits_test.cpp.s
 .PHONY : test/type_traits_test.cpp.s
 
+test/utility_test.o: test/utility_test.cpp.o
+.PHONY : test/utility_test.o
+
+# target to build an object file
+test/utility_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mak.dir/build.make CMakeFiles/mak.dir/test/utility_test.cpp.o
+.PHONY : test/utility_test.cpp.o
+
+test/utility_test.i: test/utility_test.cpp.i
+.PHONY : test/utility_test.i
+
+# target to preprocess a source file
+test/utility_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mak.dir/build.make CMakeFiles/mak.dir/test/utility_test.cpp.i
+.PHONY : test/utility_test.cpp.i
+
+test/utility_test.s: test/utility_test.cpp.s
+.PHONY : test/utility_test.s
+
+# target to generate assembly for a file
+test/utility_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mak.dir/build.make CMakeFiles/mak.dir/test/utility_test.cpp.s
+.PHONY : test/utility_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -200,6 +224,9 @@ help:
 	@echo "... test/type_traits_test.o"
 	@echo "... test/type_traits_test.i"
 	@echo "... test/type_traits_test.s"
+	@echo "... test/utility_test.o"
+	@echo "... test/utility_test.i"
+	@echo "... test/utility_test.s"
 .PHONY : help
 
 
