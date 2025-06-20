@@ -2,36 +2,42 @@
 #include "type_traits.h"
 
 namespace mak {
-
-template <class T> constexpr remove_reference_t<T> &&move(T &&t) noexcept {
-  return static_cast<remove_reference_t<T> &&>(t);
+using size_t = decltype(sizeof(const volatile unsigned long long int* const* const));
+template <class T>
+constexpr remove_reference_t<T>&& move(T&& t) noexcept {
+    return static_cast<mak::remove_reference_t<T>&&>(t);
 }
 
-template <class T, class U = T> T exchange(T &obj, U &&new_value) noexcept {
-  T old = move(obj);
-  obj = move(new_value);
-  return old;
+template <class T, class U = T>
+T exchange(T& obj, U&& new_value) noexcept {
+    T old = mak::move(obj);
+    obj = mak::move(new_value);
+    return old;
 }
 
-void swap(auto &lhs, auto &rhs) noexcept {
-  auto old = move(lhs);
-  lhs = move(rhs);
-  rhs = move(old);
+template <class T>
+void swap(T& lhs, T& rhs) noexcept {
+    T old = mak::move(lhs);
+    lhs = mak::move(rhs);
+    rhs = mak::move(old);
 }
 
-// template <class T, size_t N> void swap(T (&a)[N], T (&b)[N]) noexcept {
-//   for (size_t i{}; i < N; ++i)
-//     swap(a[i], b[i]);
-// }
+template <class T, size_t N>
+void swap(T (&a)[N], T (&b)[N]) noexcept {
+    for (size_t i {}; i < N; ++i) {
+        mak::swap(a[i], b[i]);
+    }
+}
 
-// template <class T> constexpr T &&forward(remove_reference_t<T> &t) noexcept {
-//   return static_cast<T &&>(t);
-// }
+template <class T>
+constexpr T&& forward(remove_reference_t<T>& t) noexcept {
+    return static_cast<T&&>(t);
+}
 
-// template <class T> constexpr T &&forward(remove_reference_t<T> &&t) noexcept
-// {
-//   return static_cast<T &&>(t);
-// }
+template <class T>
+constexpr T&& forward(remove_reference_t<T>&& t) noexcept {
+    return static_cast<T&&>(t);
+}
 
 // template <class T1, class T2> struct pair {
 //   T1 first;
@@ -62,4 +68,4 @@ void swap(auto &lhs, auto &rhs) noexcept {
 // pair &operator=(const pair& other);
 // };
 
-} // namespace mak
+}   // namespace mak
