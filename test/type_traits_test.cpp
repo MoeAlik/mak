@@ -1,20 +1,18 @@
 #include "headers/type_traits.h"
-#include "test/test.h"
+
 #include <stdexcept>
 #include <type_traits>
 
+#include "test/test.h"
+
 namespace {
 void test_remove_ref() {
-  if constexpr (!std::is_same_v<mak::remove_reference_t<int>, int>) {
-    throw std::runtime_error("regular case failed");
-  }
-  if constexpr (!std::is_same_v<mak::remove_reference_t<int &>, int>) {
-    throw std::runtime_error("l value ref case failed");
-  }
-  if constexpr (!std::is_same_v<mak::remove_reference_t<int &&>, int>) {
-    throw std::runtime_error("r value ref case failed");
-  }
+    assert(std::is_same_v<mak::remove_reference_t<int>, int>, "regular case failed");
+    assert(std::is_same_v<mak::remove_reference_t<int&>, int>, "l value ref case failed");
+    assert(std::is_same_v<mak::remove_reference_t<int&&>, int>, "r value ref case failed");
 }
-} // namespace
+}   // namespace
 
-void test_type_traits() { test_remove_ref(); }
+void test_type_traits() {
+    test_remove_ref();
+}
