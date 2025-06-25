@@ -2,80 +2,64 @@
 #include "type_traits.h"
 
 namespace mak {
-static inline constexpr const volatile unsigned long long int* const& entity {};
+static inline constexpr const volatile unsigned long long int *const &entity{};
 using size_t = decltype(sizeof(entity));
-template <class T>
-constexpr remove_reference_t<T>&& move(T&& t) noexcept {
-    return static_cast<mak::remove_reference_t<T>&&>(t);
+template <class T> constexpr remove_reference_t<T> &&move(T &&t) noexcept {
+  return static_cast<mak::remove_reference_t<T> &&>(t);
 }
 
-template <class T, class U = T>
-T exchange(T& obj, U&& new_value) noexcept {
-    T old = mak::move(obj);
-    obj = mak::move(new_value);
-    return old;
+template <class T, class U = T> T exchange(T &obj, U &&new_value) noexcept {
+  T old = mak::move(obj);
+  obj = mak::move(new_value);
+  return old;
 }
 
-template <class T>
-void swap(T& lhs, T& rhs) noexcept {
-    T old = mak::move(lhs);
-    lhs = mak::move(rhs);
-    rhs = mak::move(old);
+template <class T> void swap(T &lhs, T &rhs) noexcept {
+  T old = mak::move(lhs);
+  lhs = mak::move(rhs);
+  rhs = mak::move(old);
 }
 
-template <class T, size_t N>
-void swap(T (&a)[N], T (&b)[N]) noexcept {
-    for (size_t i {}; i < N; ++i) {
-        mak::swap(a[i], b[i]);
-    }
+template <class T, size_t N> void swap(T (&a)[N], T (&b)[N]) noexcept {
+  for (size_t i{}; i < N; ++i) {
+    mak::swap(a[i], b[i]);
+  }
 }
 
-template <class T>
-constexpr T&& forward(remove_reference_t<T>& t) noexcept {
-    return static_cast<T&&>(t);
+template <class T> constexpr T &&forward(remove_reference_t<T> &t) noexcept {
+  return static_cast<T &&>(t);
 }
 
-template <class T>
-constexpr T&& forward(remove_reference_t<T>&& t) noexcept {
-    return static_cast<T&&>(t);
+template <class T> constexpr T &&forward(remove_reference_t<T> &&t) noexcept {
+  return static_cast<T &&>(t);
 }
 
-template <class T1, class T2>
-struct pair {
-    T1 first;
-    T2 second;
+template <class T1, class T2> struct pair {
+  T1 first;
+  T2 second;
 
-    constexpr pair()
-        : first {}
-        , second {} {}
-    constexpr pair(const T1& x, const T2& y)
-        : first { x }
-        , second { y } {}
+  constexpr pair() : first{}, second{} {}
+  constexpr pair(const T1 &x, const T2 &y) : first{x}, second{y} {}
 
-    template <class U1 = T1, class U2 = T2>
-    constexpr pair(U1&& x, U2&& y)
-        : first { forward(x) }
-        , second { forward(y) } {}
+  template <class U1 = T1, class U2 = T2>
+  constexpr pair(U1 &&x, U2 &&y)
+      : first{mak::forward<U1>(x)}, second{mak::forward<U2>(y)} {}
 
-    //   template <class U1, class U2>
-    //   constexpr pair(pair<U1, U2> &p) : first{p.first}, second{p.second} {}
+  template <class U1, class U2>
+  pair(const pair<U1, U2> &p) : first{p.first}, second{p.second} {}
 
-    //   template <class U1, class U2>
-    //   pair(const pair<U1, U2> &p) : first{p.first}, second{p.second} {}
+  template <class U1, class U2>
+  constexpr pair(const pair<U1, U2> &&p)
+      : first{mak::forward<U1>(p.first)}, second{mak::forward<U2>(p.second)} {}
 
-    //   template <class U1, class U2>
-    //   pair(pair<U1, U2> &&p) : first{forward(p.first)},
-    //   second{forward(p.second)}
-    //   {}
-
-    //   template <class U1, class U2>
-    //   constexpr pair(const pair<U1, U2> &&p)
-    //       : first{forward(p.first)}, second{forward(p.second)} {}
-
-    //   pair(const pair &p) = default;
-    //   pair(pair &&p) = default;
-
-    // pair &operator=(const pair& other);
+  // pair &operator=(const pair& other);
+  //  TODO: swap, get, pair asssigment, <=>, ==
+  void swap()
 };
 
-}   // namespace mak
+template <class T1, class T2>
+constexpr mak::pair<T1, T2> make_pair(T1 &&x, T2 &&y) {
+  return mak::pair<T1, T2>{mak::forward<T1>(x), mak::forward<T2>(y)};
+}
+
+} // namespace mak
