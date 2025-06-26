@@ -31,10 +31,4 @@ Specification: https://en.cppreference.com/w/cpp/header/utility
 #### Classes
 
 - pair
-
-
-
-
-# thinks I care about implemeting:
-- vector
-- string
+- tuple?
