@@ -7,6 +7,9 @@
 
 #include "test/test.h"
 
+using test::assert;
+using test::assert_not;
+
 namespace {
 
 struct move_only_t {
@@ -17,7 +20,7 @@ struct move_only_t {
   move_only_t(int &&) noexcept {}
 };
 
-void test_move() {
+void move() {
   int dummy{};
   move_only_t move_only(mak::move(dummy));
   move_only = move_only_t(mak::move(1));
@@ -26,14 +29,14 @@ void test_move() {
   move_only = move_only_t(mak::move(dummy_ref));
 }
 
-void test_exchange() {
+void exchange() {
   int a = 1;
   int b = mak::exchange(a, 2);
   assert(a == 2, "exchange failed to modify value of obj");
   assert(b == 1, "exchange failed to return original value of obj");
 }
 
-void test_swaps() {
+void swaps() {
   int a = 1, b = 2;
   mak::swap(a, b);
   assert(a == 2 and b == 1, "swap failed");
@@ -55,7 +58,7 @@ template <typename T> int forward_test(T &&val) {
   return forward_overload(mak::forward<T>(val));
 }
 
-void test_forward() {
+void forward() {
   int lval{};
   int a = forward_test(lval);
   assert(a == 1, "Forward failed to forward lvalue as lvalue");
@@ -64,7 +67,7 @@ void test_forward() {
   assert(a == 0, "Forward failed to forward rvalue as rvalue");
 }
 
-void test_pair_constructor() {
+void pair_constructor() {
   mak::pair<long, double> default_init;
   assert(std::is_same_v<decltype(default_init.first), long>,
          "Default first is wrong type");
@@ -80,7 +83,7 @@ void test_pair_constructor() {
   long first = 1;
   double second = 2.0;
 
-  auto test_func = [&](auto pair) {
+  auto func = [&](auto pair) {
     assert(pair.first == 1, "const ref first has wrong value");
     assert(pair.second == 2.0, "const ref second has wrong value");
   };
@@ -89,21 +92,33 @@ void test_pair_constructor() {
       {{1, 2.0}, {1, second}, {first, 2.0}, {first, second}}};
 
   for (const auto &p : const_ref_pairs) {
-    test_func(p);
+    func(p);
   }
 
   [[maybe_unused]] auto const_ref_pair_input{mak::make_pair(1, 1ll)};
 
   [[maybe_unused]] auto forwarding_l_value_pair(const_ref_pair_input);
+}
+
+void pair_swap() {
+  auto p1 = mak::make_pair(5.f, 7ull);
+  auto p2 = mak::make_pair(3.f, 2ull);
+
+  p1.swap(p2);
+
+  assert(p1.first == 3.f, "first first wrong");
+  assert(p1.second == 2ull, "first second wrong");
+  assert(p2.first == 5.f, "second first wrong");
+  assert(p2.second == 7ull, "second second wrong");
+}
 
 } // namespace
 
-} // namespace
-
-void test_utility() {
-  test_move();
-  test_exchange();
-  test_swaps();
-  test_forward();
-  test_pair_constructor();
+void test::utility() {
+  move();
+  exchange();
+  swaps();
+  forward();
+  pair_constructor();
+  pair_swap();
 }

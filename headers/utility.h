@@ -52,9 +52,8 @@ template <class T1, class T2> struct pair {
   constexpr pair(const pair<U1, U2> &&p)
       : first{mak::forward<U1>(p.first)}, second{mak::forward<U2>(p.second)} {}
 
-  // pair &operator=(const pair& other);
   //  TODO: swap, get, pair asssigment, <=>, ==
-  void swap()
+  void swap(pair<T1, T2> &other) noexcept { mak::swap(other, *this); }
 };
 
 template <class T1, class T2>

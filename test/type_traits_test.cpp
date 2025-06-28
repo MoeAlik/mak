@@ -5,14 +5,18 @@
 
 #include "test/test.h"
 
-namespace {
-void test_remove_ref() {
-    assert(std::is_same_v<mak::remove_reference_t<int>, int>, "regular case failed");
-    assert(std::is_same_v<mak::remove_reference_t<int&>, int>, "l value ref case failed");
-    assert(std::is_same_v<mak::remove_reference_t<int&&>, int>, "r value ref case failed");
-}
-}   // namespace
+using test::assert;
+using test::assert_not;
 
-void test_type_traits() {
-    test_remove_ref();
+namespace {
+void remove_ref() {
+  assert(std::is_same_v<mak::remove_reference_t<int>, int>,
+         "regular case failed");
+  assert(std::is_same_v<mak::remove_reference_t<int &>, int>,
+         "l value ref case failed");
+  assert(std::is_same_v<mak::remove_reference_t<int &&>, int>,
+         "r value ref case failed");
 }
+} // namespace
+
+void test::type_traits() { remove_ref(); }
