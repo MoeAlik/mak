@@ -1,5 +1,6 @@
 #pragma once
 #include "type_traits.h"
+#include <type_traits>
 
 namespace mak {
 static inline constexpr const volatile unsigned long long int *const &entity{};
@@ -52,9 +53,37 @@ template <class T1, class T2> struct pair {
   constexpr pair(const pair<U1, U2> &&p)
       : first{mak::forward<U1>(p.first)}, second{mak::forward<U2>(p.second)} {}
 
-  //  TODO: swap, get, pair asssigment, <=>, ==
+  //  TODO: get, pair asssigment, <=>, ==
   void swap(pair<T1, T2> &other) noexcept { mak::swap(other, *this); }
 };
+
+template <size_t I, class T1, class T2> struct tuple_element<I, pair<T1, T2>> {
+  static_assert(false, "Invalid index");
+};
+
+template <size_t I, class T1, class T2> struct tuple_element<0, pair<T1, T2>> {
+  using type = T1;
+};
+
+template <size_t I, class T1, class T2> struct tuple_element<1, pair<T1, T2>> {
+  using type = T2;
+};
+
+template <size_t I, typename T1, typename T2>
+const tuple_element<I, pair<T1, T2>>::type &get(const pair<T1, T2> &p) {
+  if constexpr (std::is_same_v < tuple_element<I, pair<T1, T2>>::type, T1) {
+    return p.first;
+  }
+  return p.second;
+}
+
+template <size_t I, typename T1, typename T2>
+const tuple_element<I, pair<T1, T2>>::type &&get(const pair<T1, T2> &&p) {
+  if constexpr (std::is_same_v < tuple_element<I, pair<T1, T2>>::type, T1) {
+    return p.first;
+  }
+  return p.second;
+}
 
 template <class T1, class T2>
 constexpr mak::pair<T1, T2> make_pair(T1 &&x, T2 &&y) {
