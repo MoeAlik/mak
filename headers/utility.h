@@ -57,32 +57,40 @@ template <class T1, class T2> struct pair {
   void swap(pair<T1, T2> &other) noexcept { mak::swap(other, *this); }
 };
 
+template <size_t I, class T> struct tuple_element;
+
 template <size_t I, class T1, class T2> struct tuple_element<I, pair<T1, T2>> {
-  static_assert(false, "Invalid index");
+  tuple_element() { throw "out of bounds"; }
 };
 
-template <size_t I, class T1, class T2> struct tuple_element<0, pair<T1, T2>> {
+template <class T1, class T2> struct tuple_element<0, pair<T1, T2>> {
   using type = T1;
 };
 
-template <size_t I, class T1, class T2> struct tuple_element<1, pair<T1, T2>> {
+template <class T1, class T2> struct tuple_element<1, pair<T1, T2>> {
   using type = T2;
 };
-
 template <size_t I, typename T1, typename T2>
-const tuple_element<I, pair<T1, T2>>::type &get(const pair<T1, T2> &p) {
-  if constexpr (std::is_same_v < tuple_element<I, pair<T1, T2>>::type, T1) {
-    return p.first;
-  }
-  return p.second;
+const typename tuple_element<I, pair<T1, T2>>::type &
+get(const pair<T1, T2> &p) {
+  static_assert(p);
+}
+
+template <typename T1, typename T2>
+const typename tuple_element<0, pair<T1, T2>>::type &
+get(const pair<T1, T2> &p) {
+  return p.first;
 }
 
 template <size_t I, typename T1, typename T2>
-const tuple_element<I, pair<T1, T2>>::type &&get(const pair<T1, T2> &&p) {
-  if constexpr (std::is_same_v < tuple_element<I, pair<T1, T2>>::type, T1) {
+const typename tuple_element<I, pair<T1, T2>>::type &&
+get(const pair<T1, T2> &&p) {
+  if constexpr (std::is_same_v<typename tuple_element<I, pair<T1, T2>>::type,
+                               T1>) {
     return p.first;
+  } else {
+    return p.second;
   }
-  return p.second;
 }
 
 template <class T1, class T2>

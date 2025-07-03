@@ -112,6 +112,17 @@ void pair_swap() {
   assert(p2.second == 7ull, "second second wrong");
 }
 
+void pair_get() {
+  auto p1 = mak::make_pair(5.f, 7ull);
+  auto first = mak::get<0>(p1);
+  auto second = mak::get<1>(p1);
+  assert(std::is_same_v<decltype(first), float>, "get 0 wrong");
+  assert(std::is_same_v<decltype(second), size_t>, "get 1 wrong");
+
+  // first = mak::get<float>(p1);
+  // second = mak::get<size_t>(p1);
+}
+
 } // namespace
 
 void test::utility() {
@@ -121,4 +132,5 @@ void test::utility() {
   forward();
   pair_constructor();
   pair_swap();
+  pair_get();
 }
